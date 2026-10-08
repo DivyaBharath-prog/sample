@@ -15,5 +15,6 @@ public class HelloJenkins {
 
         System.out.println("================================");
         System.out.println("Build Successful!");
+        System.out.println("Hello from Jenkins - Version 2!");
     }
 }
