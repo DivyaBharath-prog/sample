@@ -1,57 +1,49 @@
-import java.util.Scanner;
-
 public class calculator {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        if (args.length < 3) {
+            System.out.println("Usage: java calculator <num1> <num2> <operation>");
+            System.out.println("Operation: +, -, *, /");
+            return;
+        }
 
-        System.out.print("Enter first number: ");
-        double num1 = sc.nextDouble();
-
-        System.out.print("Enter second number: ");
-        double num2 = sc.nextDouble();
-
-        System.out.println("\nChoose an operation:");
-        System.out.println("1. Addition");
-        System.out.println("2. Subtraction");
-        System.out.println("3. Multiplication");
-        System.out.println("4. Division");
-
-        System.out.print("Enter your choice: ");
-        int choice = sc.nextInt();
+        double num1 = Double.parseDouble(args[0]);
+        double num2 = Double.parseDouble(args[1]);
+        String operation = args[2];
 
         double result;
 
-        switch (choice) {
-            case 1:
+        switch (operation) {
+
+            case "+":
                 result = num1 + num2;
-                System.out.println("Result = " + result);
                 break;
 
-            case 2:
+            case "-":
                 result = num1 - num2;
-                System.out.println("Result = " + result);
                 break;
 
-            case 3:
+            case "*":
                 result = num1 * num2;
-                System.out.println("Result = " + result);
                 break;
 
-            case 4:
-                if (num2 != 0) {
-                    result = num1 / num2;
-                    System.out.println("Result = " + result);
-                } else {
-                    System.out.println("Cannot divide by zero.");
+            case "/":
+                if (num2 == 0) {
+                    System.out.println("Error: Cannot divide by zero.");
+                    return;
                 }
+                result = num1 / num2;
                 break;
 
             default:
-                System.out.println("Invalid choice.");
+                System.out.println("Invalid operation.");
+                return;
         }
 
-        sc.close();
+        System.out.println("First number: " + num1);
+        System.out.println("Second number: " + num2);
+        System.out.println("Operation: " + operation);
+        System.out.println("Result: " + result);
     }
 }
