@@ -18,23 +18,52 @@ pipeline {
 
         stage('Compile') {
             steps {
-                bat 'javac HelloJenkins.java'
+                bat 'javac HelloCI.java'
             }
         }
 
         stage('Run Application') {
             steps {
-                bat 'java HelloJenkins'
+                bat 'java HelloCI'
             }
         }
     }
 
     post {
-        success {
-            echo 'Java CI Pipeline completed successfully!'
+        always {
+            script {
+                def buildStatus = currentBuild.currentResult
+
+                withCredentials([
+                    string(
+                        credentialsId: 'slack-webhook-url',
+                        variable: 'SLACK_WEBHOOK_URL'
+                    )
+                ]) {
+                    powershell '''
+                        $message = "$env:BUILD_STATUS"
+                        $message = "$env:JOB_NAME build #$env:BUILD_NUMBER - $message"
+                        $message += "`nBuild details: $env:BUILD_URL"
+
+                        $body = @{ text = $message } |
+                            ConvertTo-Json -Compress
+
+                        Invoke-RestMethod `
+                            -Uri $env:SLACK_WEBHOOK_URL `
+                            -Method Post `
+                            -ContentType "application/json" `
+                            -Body $body
+                    '''
+                }
+            }
         }
+
+        success {
+            echo 'SUCCESS: Java CI Pipeline completed!'
+        }
+
         failure {
-            echo 'Pipeline failed. Check Console Output.'
+            echo 'FAILED: Check the Console Output.'
         }
     }
 }
