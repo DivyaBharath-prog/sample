@@ -49,7 +49,7 @@ pipeline {
                             ConvertTo-Json -Compress
 
                         Invoke-RestMethod `
-                            -Uri $env:SLACK_WEBHOOK_URL `
+                            --Uri $env:SLACK_WEBHOOK_URL ` `
                             -Method Post `
                             -ContentType "application/json" `
                             -Body $body
